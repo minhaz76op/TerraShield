@@ -1,6 +1,6 @@
 <div align="center">
 
-  # 🌾 TerraShield (টেরাশিল্ড)
+  # 🛡️ TerraShield (টেরাশিল্ড)
   ### *Smart LandTech Platform for Precision Measurement, Cadastral Records & Intelligent Services*
 
   <p align="center">
