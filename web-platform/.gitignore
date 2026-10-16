@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+dist/*.zip
+
+# Local server (admin prototype)
+.env
+data/

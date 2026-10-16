@@ -1,0 +1,22 @@
+{
+  "name": "terrashield",
+  "version": "3.2.1",
+  "description": "TerraShield — land double-selling and record-conflict checker (DIU LandTech 2026, Team TerraSync). Fictional sample data only.",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "setup": "node server/setup.js",
+    "start": "node server/server.js",
+    "build:data": "node scripts/build-data.js",
+    "build": "node scripts/build-standalone.js",
+    "test": "node scripts/build-data.js && node --test tests/engine.test.js tests/voice.test.js tests/calc.test.js",
+    "test:browser": "node scripts/build-standalone.js && python3 tests/browser_check.py",
+    "test:v21": "node scripts/build-standalone.js && python3 tests/browser_v21_check.py",
+    "test:calc": "node scripts/build-standalone.js && python3 tests/browser_calc_check.py",
+    "test:v23": "node scripts/build-standalone.js && python3 tests/browser_home_guide_check.py",
+    "test:server": "node --test tests/server.test.js tests/admin-api.test.js tests/admin-core.test.js",
+    "test:admin": "node scripts/build-standalone.js && python3 tests/browser_admin_check.py",
+    "test:standalone-admin": "node scripts/build-standalone.js && python3 tests/browser_standalone_admin_check.py",
+    "test:sqa": "node scripts/build-standalone.js && python3 tests/browser_sqa_check.py"
+  }
+}

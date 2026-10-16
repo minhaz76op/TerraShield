@@ -1,0 +1,42 @@
+# ==========================================
+# Operating System Files
+# ==========================================
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+
+# ==========================================
+# Environment Variables & Secrets
+# ==========================================
+.env
+.env.local
+.env.production
+*.key
+*.pem
+
+# ==========================================
+# Web Platform & Server
+# ==========================================
+web-platform/node_modules/
+web-platform/dist/
+web-platform/.netlify/
+web-platform/npm-debug.log*
+web-platform/yarn-debug.log*
+
+# ==========================================
+# Android & Mobile Apps
+# ==========================================
+apps/.gradle/
+apps/build/
+apps/**/build/
+apps/.idea/
+apps/*.iml
+apps/**/.idea/
+apps/**/*.iml
+apps/local.properties
+apps/.cxx/
+apps/*.apk
+apps/*.aab
+apps/*.keystore
+apps/*.jks

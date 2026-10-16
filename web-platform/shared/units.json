@@ -1,0 +1,17 @@
+{
+  "_about": "Land-unit constants for the TerraShield calculator (web + mobile use the same numbers). Every unit is stored as square feet. 'regional: true' means the unit's size differs between districts in Bangladesh; the value here is the commonly used standard, and the app always shows a warning next to it.",
+  "_sources": [
+    "Banglapedia — Agrometrology: https://en.banglapedia.org/index.php/Agrometrology",
+    "LegalSeba — Land Measurement Systems in Bangladesh: https://legalseba.com/bd-services/land-measurement-system-in-bangladesh/"
+  ],
+  "_notIncluded": "Ana-gonda-kora-kranti-til share units are NOT included: the conversion rules could not be verified from a reliable source and the same words are also used as (regional) area units. Kept disabled until verified.",
+  "areaUnits": [
+    { "id": "decimal", "sqft": 435.6, "regional": false, "note": "1 decimal (shatangsho / shotok) = 1/100 acre" },
+    { "id": "acre", "sqft": 43560, "regional": false, "note": "1 acre = 100 decimal" },
+    { "id": "sqft", "sqft": 1, "regional": false },
+    { "id": "sqm", "sqft": 10.763910416709722, "regional": false, "note": "1 sq ft = 0.09290304 sq m exactly" },
+    { "id": "katha", "sqft": 720, "regional": true, "note": "Common standard (720 sq ft ≈ 1.65 decimal). Differs in some districts, e.g. Netrokona/Gazipur." },
+    { "id": "bigha", "sqft": 14400, "regional": true, "note": "Common standard (20 katha ≈ 33 decimal). Differs widely: ~30 decimal Tangail, 48 Dinajpur, 52 Faridpur, 60 Rangpur, 66 Khulna." }
+  ],
+  "shareTotalUnits": ["decimal", "acre"]
+}

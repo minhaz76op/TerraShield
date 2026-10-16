@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#22795C">
+<meta name="description" content="TerraShield — জমি কেনার আগে খতিয়ান, দলিল ও নামজারির রেকর্ড মিলিয়ে নিন। হ্যাকাথন প্রোটোটাইপ; সব তথ্য কাল্পনিক; সরকারি সেবা নয়।">
+<title>TerraShield — জমি কেনার আগে যাচাই করুন</title>
+<script>/* apply saved theme + language before first paint (no flash) */try{var th=localStorage.getItem("ts-theme"),dk=th?th==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dk){document.documentElement.classList.add("dark");document.documentElement.style.colorScheme="dark"}if(localStorage.getItem("ts-lang")==="en")document.documentElement.lang="en"}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2322795C'/%3E%3Cpath d='M9.5 12.5l6-2.8 7 2.3-1.2 6.6-6.8 2.9-4.6-3.4z' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- TerraShield · Team TerraSync · DIU LandTech 2026 prototype (P3).
+       FICTIONAL SAMPLE DATA ONLY. Not a government website or service. -->
+  <a class="skip-link" href="#" data-act="skip-main"><span lang="bn">মূল অংশে যান</span> / <span lang="en">Skip to main content</span></a>
+  <div class="bg-parcels" id="bg" aria-hidden="true"></div>
+  <div class="demo-strip" id="demostrip" role="note"></div>
+  <header class="site-header" id="header"></header>
+
+  <!-- Judge Mode story: side panel + live app in a phone frame (hidden unless #/judge) -->
+  <div class="judge-stage" id="stage">
+    <div class="stage-wrap">
+      <aside class="story-panel" id="story-panel" aria-label="Judge Mode"></aside>
+      <div class="stage">
+        <p class="caption" id="stage-caption"></p>
+        <div class="phone"><span class="notch" aria-hidden="true"></span><div class="phone-screen" id="screen-host"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The app (moved into the phone frame during the Judge Mode story) -->
+  <div class="scope" id="scope">
+    <div class="apphead" id="apphead"></div>
+    <main id="view" tabindex="-1"></main>
+    <div class="actionbar" id="bar"></div>
+    <nav class="bottomnav" id="nav" aria-label="Main"></nav>
+  </div>
+
+  <footer class="site-footer" id="footer"></footer>
+  <div class="sheet-host" id="sheet" hidden></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><p style="padding:16px">TerraShield needs JavaScript. / TerraShield চালাতে JavaScript চালু করুন।</p></noscript>
+
+  <!-- Plain scripts (no modules) so the page also works when opened by double-click, offline.
+       Order matters: each file only uses the ones above it. -->
+  <script src="js/data.js"></script>
+  <script src="js/admin-validate.js"></script>
+  <script src="js/admin-core.js"></script>
+  <script src="js/data-source.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/i18n-site.js"></script>
+  <script src="js/i18n-guide.js"></script>
+  <script src="js/i18n-admin.js"></script>
+  <script src="js/ui/core.js"></script>
+  <script src="js/ui/icons.js"></script>
+  <script src="js/ui/background.js"></script>
+  <script src="js/ui/router.js"></script>
+  <script src="js/ui/components.js"></script>
+  <script src="js/screens/home.js"></script>
+  <script src="js/screens/check.js"></script>
+  <script src="js/screens/result.js"></script>
+  <script src="js/screens/samples.js"></script>
+  <script src="js/screens/help.js"></script>
+  <script src="js/screens/calc.js"></script>
+  <script src="js/screens/guide.js"></script>
+  <script src="js/admin-local.js"></script>
+  <script src="js/screens/admin.js"></script>
+  <script src="js/screens/story.js"></script>
+  <script src="js/ui/voice-panel.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

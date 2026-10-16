@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TerraShield — Engine Check</title>
+<style>
+  :root { --green:#0b5d3b; --ink:#1c2a24; --muted:#5d6b64; --line:#dfe6e2; --bg:#f6f8f7; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, "Noto Sans Bengali", sans-serif; color:var(--ink); background:var(--bg); }
+  main { max-width: 760px; margin: 0 auto; padding: 16px; }
+  h1 { color: var(--green); font-size: 22px; margin: 8px 0 4px; }
+  .note { color: var(--muted); font-size: 14px; margin: 0 0 16px; }
+  .summary { font-size: 20px; font-weight: 700; padding: 14px 16px; border-radius: 12px; background: #fff; border: 1px solid var(--line); margin-bottom: 12px; }
+  .summary.pass { border-color:#1e8e5a; color:#136b43; }
+  .summary.fail { border-color:#c0392b; color:#a3281c; }
+  table { width:100%; border-collapse: collapse; background:#fff; border-radius: 12px; overflow:hidden; font-size: 14px; }
+  th, td { text-align:left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #eef3f0; font-size: 13px; }
+  .ok { color:#136b43; font-weight:700; } .bad { color:#a3281c; font-weight:700; }
+  code { font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>TerraShield — Engine Check</h1>
+  <p class="note">নমুনা তথ্য / Sample data only. Runs every shared test case in this browser using the same engine as the app.</p>
+  <div id="summary" class="summary">Running…</div>
+  <table>
+    <thead><tr><th>Case</th><th>Expected</th><th>Got</th><th></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</main>
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script>
+  (function () {
+    var E = TS.engine, rows = document.getElementById('rows'), pass = 0;
+    TS.testCases.forEach(function (tc) {
+      var d = tc.addDeeds ? E.withExtraDeeds(TS.data, tc.addDeeds) : TS.data;
+      var r = E.check(tc.input, d);
+      var got = E.ruleIds(r), exp = tc.expect.rules.slice().sort();
+      var ok = r.status === tc.expect.status && got.join(',') === exp.join(',');
+      if (ok) pass++;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + tc.id + '<br><small>' + tc.title.bn + '</small></td>' +
+        '<td><code>' + tc.expect.status + ' [' + exp.join(', ') + ']</code></td>' +
+        '<td><code>' + r.status + ' [' + got.join(', ') + ']</code></td>' +
+        '<td class="' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓' : '✗') + '</td>';
+      rows.appendChild(tr);
+    });
+    var total = TS.testCases.length, s = document.getElementById('summary');
+    s.textContent = (pass === total ? '✓ ' : '✗ ') + pass + ' / ' + total + ' cases pass';
+    s.className = 'summary ' + (pass === total ? 'pass' : 'fail');
+  })();
+</script>
+</body>
+</html>
