@@ -1,0 +1,10 @@
+{
+  "_note": "FICTIONAL namjari (mutation) register. status: approved | pending | rejected. deedId links to deeds.json (null = no deed, e.g. inheritance claim).",
+  "namjari": [
+    { "caseNo": "N-501", "mouzaId": "M901", "dag": 106, "applicantId": "P05", "basis": "inheritance", "deedId": null,   "status": "pending",  "date": "2025-11-05" },
+    { "caseNo": "N-502", "mouzaId": "M902", "dag": 108, "applicantId": "O10", "basis": "deed",        "deedId": "D06",  "status": "approved", "date": "2023-09-10" },
+    { "caseNo": "N-503", "mouzaId": "M902", "dag": 109, "applicantId": "P09", "basis": "deed",        "deedId": "D07",  "status": "approved", "date": "2025-12-20" },
+    { "caseNo": "N-504", "mouzaId": "M902", "dag": 109, "applicantId": "O11", "basis": "deed",        "deedId": "D08",  "status": "approved", "date": "2026-01-25" },
+    { "caseNo": "N-505", "mouzaId": "M902", "dag": 110, "applicantId": "O12", "basis": "deed",        "deedId": "D09a", "status": "approved", "date": "2010-09-01" }
+  ]
+}

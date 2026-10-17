@@ -1,0 +1,10 @@
+{
+  "_note": "FICTIONAL SAMPLE DATA for the LandTech 2026 hackathon prototype. Not real places. / নমুনা তথ্য — বাস্তব স্থান নয়।",
+  "district": { "id": "D-DEMO", "name": { "bn": "নমুনা জেলা", "en": "Demo District" } },
+  "upazila": { "id": "U-DEMO", "name": { "bn": "নমুনা উপজেলা", "en": "Demo Upazila" } },
+  "subRegistryOffice": { "id": "SRO-DEMO", "name": { "bn": "নমুনা সাব-রেজিস্ট্রি অফিস", "en": "Sample Sub-Registry Office" } },
+  "mouzas": [
+    { "id": "M901", "jl": 901, "name": { "bn": "নমুনাপুর", "en": "Nomunapur" } },
+    { "id": "M902", "jl": 902, "name": { "bn": "পরীক্ষাগাঁও", "en": "Porikkhagaon" } }
+  ]
+}

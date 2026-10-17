@@ -1,0 +1,106 @@
+{
+  "_note": "Shared test contract for the web app AND the mobile app. Both must produce exactly these statuses and rule IDs. Also used as 'Try a Sample' cases. status: red | yellow | green | grey.",
+  "cases": [
+    {
+      "id": "case-01", "sample": true, "level": "green",
+      "title": { "bn": "পরিষ্কার জমি", "en": "Clean land" },
+      "story": { "bn": "রেকর্ডে কোনো অমিল নেই", "en": "No mismatch in the records" },
+      "input": { "mouzaId": "M901", "dag": 101, "sellerId": "O01", "area": 20 },
+      "expect": { "status": "green", "rules": [], "calc": { "S": 50, "A": 0, "L": 50, "W": 20 } }
+    },
+    {
+      "id": "case-02", "sample": true, "level": "yellow",
+      "title": { "bn": "আগে বিক্রি, নামজারি হয়নি", "en": "Sold before, namjari not done" },
+      "story": { "bn": "বিক্রেতা আগে কিছু অংশ বিক্রি করেছেন, তবে যথেষ্ট জমি বাকি আছে", "en": "Seller sold part earlier, but enough is left" },
+      "input": { "mouzaId": "M901", "dag": 102, "sellerId": "O02", "area": 30 },
+      "expect": { "status": "yellow", "rules": ["R1"], "calc": { "S": 60, "A": 20, "L": 40, "W": 30 } }
+    },
+    {
+      "id": "case-03", "sample": true, "level": "red",
+      "title": { "bn": "একই জমি আবার বিক্রি", "en": "Same land being sold again" },
+      "story": { "bn": "বিক্রেতার বাকি জমির চেয়ে বেশি বিক্রি হচ্ছে", "en": "Seller is selling more than he has left" },
+      "input": { "mouzaId": "M901", "dag": 103, "sellerId": "O03", "area": 20 },
+      "expect": { "status": "red", "rules": ["R1", "R2"], "calc": { "S": 40, "A": 30, "L": 10, "W": 20 } }
+    },
+    {
+      "id": "case-03b", "sample": false, "level": "yellow",
+      "title": { "bn": "সীমানা পরীক্ষা: ঠিক বাকি জমি", "en": "Edge test: exactly the land left" },
+      "story": { "bn": "R2 আগেভাগে চালু হয় না তা প্রমাণ", "en": "Proves R2 does not fire too early" },
+      "input": { "mouzaId": "M901", "dag": 103, "sellerId": "O03", "area": 10 },
+      "expect": { "status": "yellow", "rules": ["R1"], "calc": { "S": 40, "A": 30, "L": 10, "W": 10 } }
+    },
+    {
+      "id": "case-04", "sample": true, "level": "red",
+      "title": { "bn": "বিক্রেতা খতিয়ানে নেই", "en": "Seller not in the khatian" },
+      "story": { "bn": "বিক্রেতার নাম সর্বশেষ খতিয়ানে নেই", "en": "The seller's name is not in the latest khatian" },
+      "input": { "mouzaId": "M901", "dag": 104, "sellerId": null, "sellerName": "হাবিব রহমান", "area": 10 },
+      "expect": { "status": "red", "rules": ["R3"], "skipped": ["area"] }
+    },
+    {
+      "id": "case-05", "sample": true, "level": "red",
+      "title": { "bn": "আগেই দুইজনের কাছে বিক্রি", "en": "Already sold to two people" },
+      "story": { "bn": "একই জমি দুটি দলিলে দুইজনের কাছে বিক্রি", "en": "The same land sold in two deeds to two buyers" },
+      "input": { "mouzaId": "M901", "dag": 105, "sellerId": "O05", "area": 10 },
+      "expect": { "status": "red", "rules": ["R1", "R2", "R4"], "calc": { "S": 25, "A": 50, "L": -25, "W": 10 } }
+    },
+    {
+      "id": "case-06", "sample": true, "level": "yellow",
+      "title": { "bn": "অন্যের নামজারি চলমান", "en": "Someone else's namjari pending" },
+      "story": { "bn": "এই জমিতে অন্য একজন নামজারির আবেদন করেছেন", "en": "Another person has applied for namjari on this land" },
+      "input": { "mouzaId": "M901", "dag": 106, "sellerId": "O06", "area": 15 },
+      "expect": { "status": "yellow", "rules": ["R5"], "calc": { "S": 45, "A": 0, "L": 45, "W": 15 } }
+    },
+    {
+      "id": "case-07", "sample": true, "level": "yellow",
+      "title": { "bn": "খতিয়ানে অংশ বেশি", "en": "Khatian shares too large" },
+      "story": { "bn": "মালিকদের মোট অংশ দাগের জমির চেয়ে বেশি", "en": "Owners' shares add up to more than the plot" },
+      "input": { "mouzaId": "M902", "dag": 107, "sellerId": "O07", "area": 10 },
+      "expect": { "status": "yellow", "rules": ["R6"], "calc": { "S": 20, "A": 0, "L": 20, "W": 10 } }
+    },
+    {
+      "id": "case-08", "sample": true, "level": "red",
+      "title": { "bn": "কেনার আগেই বিক্রি", "en": "Sold before he bought it" },
+      "story": { "bn": "দলিলের তারিখে অসঙ্গতি", "en": "The deed dates don't make sense" },
+      "input": { "mouzaId": "M902", "dag": 108, "sellerId": "O10", "area": 10 },
+      "expect": { "status": "red", "rules": ["R7a"], "calc": { "S": 35, "A": 0, "L": 35, "W": 10 } }
+    },
+    {
+      "id": "case-09", "sample": true, "level": "green",
+      "title": { "bn": "দ্রুত হাতবদল (শুধু তথ্য)", "en": "Quick resale (information only)" },
+      "story": { "bn": "অমিল নেই, তবে জমিটি অল্প সময়ে হাতবদল হয়েছে", "en": "No mismatch, but the land changed hands quickly" },
+      "input": { "mouzaId": "M902", "dag": 109, "sellerId": "O11", "area": 10 },
+      "expect": { "status": "green", "rules": ["R7b"], "calc": { "S": 20, "A": 0, "L": 20, "W": 10 } }
+    },
+    {
+      "id": "case-10", "sample": true, "level": "red",
+      "title": { "bn": "একই নম্বরের দুটি দলিল", "en": "Two deeds with the same number" },
+      "story": { "bn": "বিক্রেতার দলিল নম্বর রেকর্ডে দুইবার আছে", "en": "The seller's deed number appears twice" },
+      "input": { "mouzaId": "M902", "dag": 110, "sellerId": "O12", "area": 15, "sellerDeedNo": "0109/2010" },
+      "expect": { "status": "red", "rules": ["R8c"], "calc": { "S": 40, "A": 0, "L": 40, "W": 15 } }
+    },
+    {
+      "id": "case-10b", "sample": false, "level": "yellow",
+      "title": { "bn": "দলিল পাওয়া যায়নি", "en": "Deed not found" },
+      "story": { "bn": "দেওয়া দলিল নম্বর নমুনা রেকর্ডে নেই", "en": "The given deed number is not in the sample records" },
+      "input": { "mouzaId": "M902", "dag": 110, "sellerId": "O12", "area": 15, "sellerDeedNo": "0999/2010" },
+      "expect": { "status": "yellow", "rules": ["R8a"] }
+    },
+    {
+      "id": "case-11", "sample": true, "level": "grey",
+      "title": { "bn": "অজানা জমি", "en": "Unknown land" },
+      "story": { "bn": "এই দাগ নমুনা রেকর্ডে নেই", "en": "This dag is not in the sample records" },
+      "input": { "mouzaId": "M901", "dag": 999, "sellerId": null, "area": 10 },
+      "expect": { "status": "grey", "rules": [] }
+    },
+    {
+      "id": "demo-live", "sample": false, "level": "red",
+      "title": { "bn": "লাইভ ডেমো: নতুন বিক্রয়ের পর", "en": "Live demo: after adding a sale" },
+      "story": { "bn": "রহিম উদ্দিন ৪০ শতাংশ বিক্রি করার পর আবার যাচাই", "en": "Re-check after Rahim Uddin sells 40 decimal" },
+      "addDeeds": [
+        { "id": "DEMO-1", "deedNo": "9001/2026", "office": "SRO-DEMO", "date": "2026-10-18", "sellerId": "O01", "buyerId": "P99", "mouzaId": "M901", "dag": 101, "area": 40 }
+      ],
+      "input": { "mouzaId": "M901", "dag": 101, "sellerId": "O01", "area": 20 },
+      "expect": { "status": "red", "rules": ["R1", "R2"], "calc": { "S": 50, "A": 40, "L": 10, "W": 20 } }
+    }
+  ]
+}

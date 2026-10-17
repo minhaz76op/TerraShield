@@ -1,0 +1,15 @@
+{
+  "_note": "FICTIONAL latest khatian records, one dag per khatian. Shares in decimal.",
+  "khatians": [
+    { "khatianNo": "201", "mouzaId": "M901", "dag": 101, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O01", "share": 50 }] },
+    { "khatianNo": "202", "mouzaId": "M901", "dag": 102, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O02", "share": 60 }] },
+    { "khatianNo": "203", "mouzaId": "M901", "dag": 103, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O03", "share": 40 }] },
+    { "khatianNo": "204", "mouzaId": "M901", "dag": 104, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O04", "share": 30 }] },
+    { "khatianNo": "205", "mouzaId": "M901", "dag": 105, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O05", "share": 25 }] },
+    { "khatianNo": "206", "mouzaId": "M901", "dag": 106, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O06", "share": 45 }] },
+    { "khatianNo": "207", "mouzaId": "M902", "dag": 107, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O07", "share": 20 }, { "personId": "O08", "share": 20 }] },
+    { "khatianNo": "208", "mouzaId": "M902", "dag": 108, "survey": "BS (updated by namjari)", "recordDate": "2023-09-15", "owners": [{ "personId": "O10", "share": 35 }] },
+    { "khatianNo": "209", "mouzaId": "M902", "dag": 109, "survey": "BS (updated by namjari)", "recordDate": "2026-02-01", "owners": [{ "personId": "O11", "share": 20 }] },
+    { "khatianNo": "210", "mouzaId": "M902", "dag": 110, "survey": "BS", "recordDate": "2015-06-30", "owners": [{ "personId": "O12", "share": 40 }] }
+  ]
+}

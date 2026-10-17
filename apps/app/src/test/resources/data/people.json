@@ -1,0 +1,28 @@
+{
+  "_note": "FICTIONAL people. Any resemblance to real persons is coincidental. No NID or phone numbers are stored. / কাল্পনিক ব্যক্তি।",
+  "people": [
+    { "id": "O01", "name": { "bn": "রহিম উদ্দিন", "en": "Rahim Uddin" } },
+    { "id": "O02", "name": { "bn": "করিম হোসেন", "en": "Karim Hossain" } },
+    { "id": "O03", "name": { "bn": "জামাল মিয়া", "en": "Jamal Mia" } },
+    { "id": "O04", "name": { "bn": "আব্দুল কাদের", "en": "Abdul Kader" } },
+    { "id": "O05", "name": { "bn": "ফারুক আহমেদ", "en": "Faruk Ahmed" } },
+    { "id": "O06", "name": { "bn": "শাহিদা পারভীন", "en": "Shahida Parvin" } },
+    { "id": "O07", "name": { "bn": "আনোয়ার হোসেন", "en": "Anwar Hossain" } },
+    { "id": "O08", "name": { "bn": "দেলোয়ার হোসেন", "en": "Delwar Hossain" } },
+    { "id": "O10", "name": { "bn": "সুমন আলী", "en": "Sumon Ali" } },
+    { "id": "O11", "name": { "bn": "রফিক ইসলাম", "en": "Rafiq Islam" } },
+    { "id": "O12", "name": { "bn": "নাজমা বেগম", "en": "Nazma Begum" } },
+    { "id": "P01", "name": { "bn": "সেলিনা আক্তার", "en": "Selina Akter" } },
+    { "id": "P02", "name": { "bn": "নাসরিন বেগম", "en": "Nasrin Begum" } },
+    { "id": "P03", "name": { "bn": "মনির হোসেন", "en": "Monir Hossain" } },
+    { "id": "P04", "name": { "bn": "রিনা খাতুন", "en": "Rina Khatun" } },
+    { "id": "P05", "name": { "bn": "মিজানুর রহমান", "en": "Mizanur Rahman" } },
+    { "id": "P06", "name": { "bn": "তানিয়া সুলতানা", "en": "Tania Sultana" } },
+    { "id": "P07", "name": { "bn": "বাদশা মিয়া", "en": "Badsha Mia" } },
+    { "id": "P08", "name": { "bn": "কালাম শেখ", "en": "Kalam Sheikh" } },
+    { "id": "P09", "name": { "bn": "বাবুল মিয়া", "en": "Babul Mia" } },
+    { "id": "P10", "name": { "bn": "হানিফ মোল্লা", "en": "Hanif Mollah" } },
+    { "id": "P11", "name": { "bn": "কামরুল হাসান", "en": "Kamrul Hasan" } },
+    { "id": "P99", "name": { "bn": "নমুনা ক্রেতা", "en": "Demo Buyer" } }
+  ]
+}

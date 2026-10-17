@@ -1,0 +1,15 @@
+{
+  "_note": "FICTIONAL plots (dag). Area unit: decimal (শতাংশ).",
+  "plots": [
+    { "mouzaId": "M901", "dag": 101, "totalArea": 50 },
+    { "mouzaId": "M901", "dag": 102, "totalArea": 60 },
+    { "mouzaId": "M901", "dag": 103, "totalArea": 40 },
+    { "mouzaId": "M901", "dag": 104, "totalArea": 30 },
+    { "mouzaId": "M901", "dag": 105, "totalArea": 25 },
+    { "mouzaId": "M901", "dag": 106, "totalArea": 45 },
+    { "mouzaId": "M902", "dag": 107, "totalArea": 30 },
+    { "mouzaId": "M902", "dag": 108, "totalArea": 35 },
+    { "mouzaId": "M902", "dag": 109, "totalArea": 20 },
+    { "mouzaId": "M902", "dag": 110, "totalArea": 40 }
+  ]
+}

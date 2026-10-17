@@ -1,0 +1,15 @@
+{
+  "_note": "FICTIONAL deed register. All at the Sample Sub-Registry Office. Deed no. = number/year; the same number+year should never appear twice (D09a/D09b intentionally break this for test case 10).",
+  "deeds": [
+    { "id": "D01",  "deedNo": "0101/2022", "office": "SRO-DEMO", "date": "2022-03-10", "sellerId": "O02", "buyerId": "P01", "mouzaId": "M901", "dag": 102, "area": 20 },
+    { "id": "D02",  "deedNo": "0102/2023", "office": "SRO-DEMO", "date": "2023-01-15", "sellerId": "O03", "buyerId": "P02", "mouzaId": "M901", "dag": 103, "area": 30 },
+    { "id": "D03",  "deedNo": "0103/2021", "office": "SRO-DEMO", "date": "2021-05-02", "sellerId": "O05", "buyerId": "P03", "mouzaId": "M901", "dag": 105, "area": 25 },
+    { "id": "D04",  "deedNo": "0104/2021", "office": "SRO-DEMO", "date": "2021-09-20", "sellerId": "O05", "buyerId": "P04", "mouzaId": "M901", "dag": 105, "area": 25 },
+    { "id": "D05",  "deedNo": "0105/2023", "office": "SRO-DEMO", "date": "2023-05-10", "sellerId": "O10", "buyerId": "P06", "mouzaId": "M902", "dag": 108, "area": 10 },
+    { "id": "D06",  "deedNo": "0106/2023", "office": "SRO-DEMO", "date": "2023-08-01", "sellerId": "P07", "buyerId": "O10", "mouzaId": "M902", "dag": 108, "area": 35 },
+    { "id": "D07",  "deedNo": "0107/2025", "office": "SRO-DEMO", "date": "2025-12-01", "sellerId": "P08", "buyerId": "P09", "mouzaId": "M902", "dag": 109, "area": 20 },
+    { "id": "D08",  "deedNo": "0108/2026", "office": "SRO-DEMO", "date": "2026-01-05", "sellerId": "P09", "buyerId": "O11", "mouzaId": "M902", "dag": 109, "area": 20 },
+    { "id": "D09a", "deedNo": "0109/2010", "office": "SRO-DEMO", "date": "2010-04-12", "sellerId": "P10", "buyerId": "O12", "mouzaId": "M902", "dag": 110, "area": 40 },
+    { "id": "D09b", "deedNo": "0109/2010", "office": "SRO-DEMO", "date": "2010-07-03", "sellerId": "P10", "buyerId": "P11", "mouzaId": "M902", "dag": 110, "area": 40 }
+  ]
+}
