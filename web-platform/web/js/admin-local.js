@@ -54,14 +54,66 @@
   /* ---------- password hashing (Web Crypto PBKDF2) ---------- */
   function b64(buf) { var s = '', a = new Uint8Array(buf); for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
   function unb64(s) { var bin = atob(s), a = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return a; }
+  /* PBKDF2-HMAC-SHA-256 in plain JavaScript — same result as Web Crypto. Used only where the browser hides
+     crypto.subtle (a page opened over plain http:// from another computer, e.g. http://192.168.x.x). */
+  var K256 = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var IV256 = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var Wbuf = new Int32Array(64);
+  function compress(st, w16) {                               // st: Int32Array(8) in/out, w16: 16 words
+    var W = Wbuf, i, a = st[0], b = st[1], c = st[2], d = st[3], e = st[4], f = st[5], g = st[6], h = st[7], t1, t2, x, y;
+    for (i = 0; i < 16; i++) W[i] = w16[i];
+    for (i = 16; i < 64; i++) { x = W[i - 15]; y = W[i - 2];
+      W[i] = (((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3)) + W[i - 7] + (((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10)) + W[i - 16] | 0; }
+    for (i = 0; i < 64; i++) {
+      t1 = h + (((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7))) + ((e & f) ^ (~e & g)) + K256[i] + W[i] | 0;
+      t2 = (((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10))) + ((a & b) ^ (a & c) ^ (b & c)) | 0;
+      h = g; g = f; f = e; e = d + t1 | 0; d = c; c = b; b = a; a = t1 + t2 | 0;
+    }
+    st[0] = st[0] + a | 0; st[1] = st[1] + b | 0; st[2] = st[2] + c | 0; st[3] = st[3] + d | 0;
+    st[4] = st[4] + e | 0; st[5] = st[5] + f | 0; st[6] = st[6] + g | 0; st[7] = st[7] + h | 0;
+  }
+  function bytesToWords(bytes, totalLenBefore) {             // SHA-256 of (prefix blocks already hashed) + bytes, padded → word blocks
+    var len = bytes.length, total = totalLenBefore + len, n = ((len + 9 + 63) >> 6) << 4, w = new Int32Array(n), i;
+    for (i = 0; i < len; i++) w[i >> 2] |= bytes[i] << (24 - (i % 4) * 8);
+    w[len >> 2] |= 0x80 << (24 - (len % 4) * 8);
+    w[n - 1] = total * 8; w[n - 2] = Math.floor(total / 0x20000000);
+    return w;
+  }
+  function sha256From(state, bytes, before) { var st = new Int32Array(state), w = bytesToWords(bytes, before); for (var i = 0; i < w.length; i += 16) compress(st, w.subarray(i, i + 16)); return st; }
+  function wordsToBytes(st) { var out = new Uint8Array(32); for (var i = 0; i < 32; i++) out[i] = (st[i >> 2] >>> (24 - (i % 4) * 8)) & 255; return out; }
+  function pbkdf2js(passBytes, salt, iter) {
+    var key = passBytes.length > 64 ? wordsToBytes(sha256From(IV256, passBytes, 0)) : passBytes, i, j;
+    var ipad = new Uint8Array(64), opad = new Uint8Array(64);
+    for (i = 0; i < 64; i++) { var k = i < key.length ? key[i] : 0; ipad[i] = k ^ 0x36; opad[i] = k ^ 0x5c; }
+    var iState = new Int32Array(IV256), oState = new Int32Array(IV256), blk = new Int32Array(16);
+    for (i = 0; i < 16; i++) blk[i] = (ipad[i * 4] << 24) | (ipad[i * 4 + 1] << 16) | (ipad[i * 4 + 2] << 8) | ipad[i * 4 + 3]; compress(iState, blk);
+    for (i = 0; i < 16; i++) blk[i] = (opad[i * 4] << 24) | (opad[i * 4 + 1] << 16) | (opad[i * 4 + 2] << 8) | opad[i * 4 + 3]; compress(oState, blk);
+    var first = new Uint8Array(salt.length + 4); first.set(salt); first[salt.length + 3] = 1;      // block index 1 (32-byte output)
+    var u = sha256From(oState, wordsToBytes(sha256From(iState, first, 64)), 64);
+    var acc = new Int32Array(u), st = new Int32Array(8), m = new Int32Array(16);
+    m[8] = 0x80000000; m[15] = (64 + 32) * 8;                 // padding for a 32-byte message after the 64-byte key block
+    for (j = 1; j < iter; j++) {
+      for (i = 0; i < 8; i++) m[i] = u[i];
+      st.set(iState); compress(st, m); for (i = 0; i < 8; i++) m[i] = st[i];
+      st.set(oState); compress(st, m); for (i = 0; i < 8; i++) { u[i] = st[i]; acc[i] ^= st[i]; }
+    }
+    return wordsToBytes(acc);
+  }
+
   function pbkdf2(password, saltB64, iter) {
-    if (!window.crypto || !crypto.subtle) return Promise.reject(E(501, 'crypto_unavailable'));
+    if (!window.crypto || !crypto.subtle) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () { try { resolve(b64(pbkdf2js(new TextEncoder().encode(String(password)), unb64(saltB64), iter).buffer)); } catch (e) { reject(E(501, 'crypto_unavailable')); } }, 0);
+      });
+    }
     return crypto.subtle.importKey('raw', new TextEncoder().encode(String(password)), 'PBKDF2', false, ['deriveBits'])
       .then(function (k) { return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: unb64(saltB64), iterations: iter, hash: 'SHA-256' }, k, 256); })
       .then(b64);
   }
   function newHash(password) {
-    var salt = new Uint8Array(16); crypto.getRandomValues(salt);
+    var salt = new Uint8Array(16);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(salt);          // available even on plain http://
+    else for (var i = 0; i < 16; i++) salt[i] = Math.floor(Math.random() * 256);
     var s = b64(salt);
     return pbkdf2(password, s, ITER).then(function (h) { return { salt: s, hash: h, iter: ITER, alg: 'PBKDF2-SHA256' }; });
   }

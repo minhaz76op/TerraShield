@@ -97,3 +97,28 @@ test('restored backups are rebuilt from known fields only (types fixed, unknown 
   assert.ok(s.db.log.every((e) => typeof e === 'object' && !('junk' in e)));
   assert.equal(engine.check(case01, C.mergePublic(s.base, s.db.records).data).status, 'red', 'restored record really is used');
 });
+
+test('file-mode password hashing fallback (no Web Crypto on plain http://) equals standard PBKDF2-SHA-256', () => {
+  const crypto = require('crypto');
+  const src = fs.readFileSync(path.join(ROOT, 'web/js/admin-local.js'), 'utf8');
+  const pbkdf2js = new Function(src.slice(src.indexOf('  var K256'), src.indexOf('  function pbkdf2(password')) + ';return pbkdf2js;')();
+  const cases = [['TerraShield-Demo-2026', 'saltsaltsaltsalt', 1], ['TerraShield-Demo-2026', 'saltsaltsaltsalt', 2000], ['x'.repeat(100), '0123456789abcdef', 25],
+    ['বাংলা-পাসওয়ার্ড-১২৩', '0123456789abcdef', 7], ['p', '', 3], ['TerraShield-Demo-2026', '0123456789abcdef', 310000]];
+  for (const [pw, salt, it] of cases) {
+    const ours = Buffer.from(pbkdf2js(Buffer.from(pw), Buffer.from(salt), it)).toString('hex');
+    assert.equal(ours, crypto.pbkdf2Sync(pw, salt, it, 32, 'sha256').toString('hex'), pw.slice(0, 12) + ' × ' + it);
+  }
+});
+
+test('restoring a backup after reset keeps each log entry once, with its details', () => {
+  const s = memStore(), R = C.createRecords(s);
+  R.create('a@x.y', 'deed', SALE); R.approve('a@x.y', 'AR-1', '', true); R.archive('a@x.y', 'AR-1', 'old');
+  R.note('-', 'login_failed', { reason: 'bad_credentials' });
+  const bk = R.exportBackup();
+  R.reset('a@x.y'); R.importBackup('a@x.y', bk); R.importBackup('a@x.y', bk);
+  const arch = s.db.log.filter((l) => l.action === 'archive');
+  assert.equal(arch.length, 1, 'archive entry not duplicated');
+  assert.deepEqual(arch[0].detail, { note: 'old', from: 'reviewed' }, 'details kept');
+  assert.equal(s.db.log.filter((l) => l.action === 'login_failed').length, 1);
+  assert.equal(s.db.log.find((l) => l.action === 'login_failed').detail.reason, 'bad_credentials');
+});

@@ -5,6 +5,9 @@ Runs on the double-clicked dist/terrashield.html (no server, network blocked):
   tampered backup is cleaned before it is stored and really used · odd payloads give an error, not a crash ·
   all admin tabs visible at 320 px with no sideways scroll · log links at least 24 px · every wizard step and
   the review page have exactly one <h1> · skip link marked with the right languages · no console errors.
+v3.3: the site on an ordinary static web host (GitHub Pages / Live Server style, no TerraShield API) uses this
+  browser's Admin Panel instead of failing; direct #/admin link; full add → approve → check flow; persistence;
+  a plain-http LAN address (no Web Crypto) still logs in thanks to the built-in PBKDF2 fallback.
 Run:  python3 tests/browser_sqa_check.py
 """
 import json, pathlib, sys, tempfile
@@ -98,6 +101,55 @@ with sync_playwright() as p:
     ok(langs == ['bn', 'en'], f'Skip link marked bn + en {langs}')
     ok(not errors, 'No console errors' + ('' if not errors else ': ' + ' | '.join(errors[:3])))
     ctx.close()
+
+# ======================= v3.3: static web host, no TerraShield API =======================
+import socket, subprocess, time
+def free_port():
+    with socket.socket() as so: so.bind(('127.0.0.1', 0)); return so.getsockname()[1]
+def lan_ip():
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as so: so.connect(('192.0.2.1', 9)); ip = so.getsockname()[0]
+        return None if ip.startswith('127.') else ip
+    except OSError: return None
+ADD_APPROVE = """async () => { const a = TS.adminLocal.request;
+  const c = await a('POST', 'records', { type: 'deed', data: { mouzaId: 'M901', dag: 101, deedNo: '9001/2026', date: '2026-10-01', sellerId: 'O01', buyerId: 'P99', area: 40 } });
+  const ap = await a('POST', 'records/' + c.body.record.id + '/approve', { confirm: true }); return [c.status, ap.status]; }"""
+port = free_port()
+static = subprocess.Popen([sys.executable, '-m', 'http.server', str(port), '--bind', '0.0.0.0'], cwd=str(ROOT / 'dist'), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+try:
+    time.sleep(1.0)
+    with sync_playwright() as p:
+        print('\n== Static web host (no TerraShield server) ==')
+        b = p.chromium.launch()
+        ctx = b.new_context(viewport={'width': 1366, 'height': 900}); pg = ctx.new_page(); errs = []
+        pg.on('pageerror', lambda e: errs.append(str(e)))
+        base = f'http://127.0.0.1:{port}/terrashield.html'
+        pg.goto(base + '#/admin'); pg.wait_for_selector('.ad-demo, .ad-login .notice', timeout=20000); pg.wait_for_timeout(300)
+        ok(pg.evaluate('TS.dataSource.served') is False and pg.evaluate('TS.dataSource.mode') == 'local', 'Static host detected: no TerraShield API → this-browser mode (not a broken server mode)')
+        ok(pg.locator('.ad-demo').count() == 1 and pg.locator('#admin-root .notice').count() == 0, 'Direct #/admin link opens the Admin Login with the demo account (was: "কিছু একটা ভুল হয়েছে")')
+        pg.fill('#ad-email', pg.inner_text('#ad-demo-email')); pg.fill('#ad-pass', pg.inner_text('#ad-demo-password')); pg.click('#ad-login-form [type=submit]')
+        pg.wait_for_selector('.ad-tiles', timeout=20000); ok(True, 'Demo login works → dashboard')
+        r = pg.evaluate(ADD_APPROVE)
+        ok(r == [201, 200], f'Add + approve a record on the static host {r}')
+        pg.goto(base); pg.wait_for_selector('.hero-forest'); pg.evaluate('TS.dataSource.ready'); pg.wait_for_timeout(500)
+        ok(pg.evaluate("TS.dataMeta.source") == 'local' and pg.evaluate("TS.engine.check({mouzaId:'M901',dag:101,sellerId:'O01',area:20}, TS.data).status") == 'red', "After reload the approved record is still used by the website's own check (red)")
+        ok(pg.evaluate("TS.engine.check({mouzaId:'M901',dag:101,sellerId:'O01',area:20}, TS.baseData).status") == 'green', 'Samples / 14 tests still use the untouched fictional data (green)')
+        ok(not errs, 'No JavaScript errors on the static host' + ('' if not errs else ': ' + errs[0]))
+        ctx.close()
+        ip = lan_ip()
+        if ip:
+            print('\n== Plain http:// LAN address (no Web Crypto) ==')
+            ctx = b.new_context(); pg = ctx.new_page()
+            pg.goto(f'http://{ip}:{port}/terrashield.html#/admin'); pg.wait_for_selector('.ad-demo, .ad-login .notice', timeout=20000)
+            ok(pg.evaluate('!!(window.crypto && crypto.subtle)') is False, f"http://{ip} is not a secure context (crypto.subtle hidden, as on a phone opening the laptop's address)")
+            pg.fill('#ad-email', pg.inner_text('#ad-demo-email')); pg.fill('#ad-pass', pg.inner_text('#ad-demo-password')); pg.click('#ad-login-form [type=submit]')
+            pg.wait_for_selector('.ad-tiles', timeout=60000); ok(True, 'Demo login still works there (built-in PBKDF2-SHA-256 fallback)')
+            ctx.close()
+        else:
+            print('  (no LAN address on this machine — plain-http check skipped)')
+        b.close()
+finally:
+    static.terminate()
 
 print(f'\n{checks - len(failures)}/{checks} checks passed')
 sys.exit(1 if failures else 0)

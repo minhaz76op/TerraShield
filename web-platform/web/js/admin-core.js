@@ -66,6 +66,17 @@
   }
 
   function createRecords(store) {
+    // The only detail fields the change log ever writes — a restored backup keeps exactly these (typed, length-limited).
+    function logDetail(x) {
+      if (!x || typeof x !== 'object') return null;
+      var o = {}, n = 0;
+      if (typeof x.note === 'string' && x.note) { o.note = String(x.note).slice(0, NOTE_MAX); n++; }
+      if (STATUSES.indexOf(x.from) >= 0) { o.from = x.from; n++; }
+      if (typeof x.backToDraft === 'boolean') { o.backToDraft = x.backToDraft; n++; }
+      ['removed', 'records'].forEach(function (k) { if (typeof x[k] === 'number' && isFinite(x[k]) && x[k] >= 0) { o[k] = Math.floor(x[k]); n++; } });
+      if (typeof x.reason === 'string' && /^[a-z_]{1,40}$/.test(x.reason)) { o.reason = x.reason; n++; }
+      return n ? o : null;
+    }
     function log(d, actor, action, rec, detail) {
       var e = { at: iso(), actor: actor, action: action };
       if (rec) { e.recordId = rec.id; e.type = rec.type; }
@@ -253,13 +264,14 @@
         return store.mutate(function (d) {
           d.records = clone(incoming);
           // Never lose history: keep this browser's log AND the backup's log (no duplicates, in time order).
-          var seen = {}, merged = d.log.concat(clone(backup.db.log).map(function (e) {
+          var seen = {}, merged = d.log.concat(clone(backup.db.log)).map(function (e) {
             if (!e || typeof e !== 'object') return null;
             var o = { at: txt(e.at, 40), actor: txt(e.actor, 120), action: txt(e.action, 40) };
             if (/^AR-\d{1,9}$/.test(e.recordId || '')) { o.recordId = e.recordId; o.type = TYPES[e.type] ? e.type : ''; }
-            if (e.detail && typeof e.detail === 'object' && e.detail.note) o.detail = { note: txt(e.detail.note, NOTE_MAX) };
-            return o; })).filter(function (e) {
+            o.detail = logDetail(e.detail); if (!o.detail) delete o.detail;
+            return o; }).filter(function (e) {
             if (!e || !e.at || !e.action) return false;
+            // both logs are rebuilt the same way, so an entry present in both is recognised and kept once
             var k = JSON.stringify(e); if (seen[k]) return false; seen[k] = true; return true;
           });
           merged.sort(function (x, y) { return x.at < y.at ? -1 : x.at > y.at ? 1 : 0; });

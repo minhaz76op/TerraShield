@@ -23,8 +23,13 @@
 
   /* ======================= API ======================= */
   function isLocal() { return !(TS.dataSource && TS.dataSource.served); }
-  // → Promise<{ status, body }> from the server, or from admin-local.js when the page is a file
+  // → Promise<{ status, body }> from the server, or from admin-local.js when the page is a file or on a host
+  //   without the TerraShield server. Waits until data-source.js knows which one it is.
   function transport(method, path, body) {
+    var ready = (TS.dataSource && TS.dataSource.ready) || Promise.resolve();
+    return ready.then(function () { return send(method, path, body); }, function () { return send(method, path, body); });
+  }
+  function send(method, path, body) {
     if (isLocal()) return TS.adminLocal.request(method, path, body);
     var h = {};
     if (body !== undefined) h['Content-Type'] = 'application/json';

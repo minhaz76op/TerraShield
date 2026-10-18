@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TerraShield">
+  <defs>
+    <linearGradient id="bgd" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17463A"/><stop offset="1" stop-color="#0A231C"/>
+    </linearGradient>
+    <clipPath id="shd"><path d="M256 92 L396 142 V258 C396 346 338 402 256 432 C174 402 116 346 116 258 V142 Z"/></clipPath>
+  </defs>
+  <rect width="512" height="512" rx="114" fill="url(#bgd)"/>
+  <!-- shield = land parcel -->
+  <path d="M256 92 L396 142 V258 C396 346 338 402 256 432 C174 402 116 346 116 258 V142 Z" fill="#F5F8F6"/>
+  <!-- verified parcel: the area below the boundary line -->
+  <g clip-path="url(#shd)">
+    <polygon points="100,262 232,352 412,176 412,450 100,450" fill="#BFE6D3"/>
+    <!-- parcel boundary that is also a check mark -->
+    <polyline points="100,262 232,352 412,176" fill="none" stroke="#1A6650" stroke-width="30" stroke-linejoin="round"/>
+    <!-- second boundary: dag division -->
+    <line x1="232" y1="352" x2="232" y2="450" stroke="#1A6650" stroke-width="16"/>
+  </g>
+  <!-- the sun of the flag -->
+  <circle cx="226" cy="198" r="40" fill="#E03A3E"/>
+</svg>

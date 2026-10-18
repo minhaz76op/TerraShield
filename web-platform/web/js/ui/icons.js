@@ -11,7 +11,6 @@
   var I = {
     back: svg('<path d="M15 18l-6-6 6-6"/>'),
     next: svg('<path d="M9 18l6-6-6-6"/>'),
-    logo: '<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#22795C"/><path d="M16 4.5l9 3.2v6.6c0 5.9-3.8 10.1-9 12.1-5.2-2-9-6.2-9-12.1V7.7z" fill="#fff" opacity=".16"/><path d="M9.5 12.5l6-2.8 7 2.3-1.2 6.6-6.8 2.9-4.6-3.4z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M15.5 9.7l-.9 11.8M9.5 12.5l12.3 6.1" stroke="#CBEADB" stroke-width="1.2" stroke-dasharray="1.8 1.8"/></svg>',
     speaker: svg('<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>'),
     speakerOff: svg('<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/>'),
     mic: svg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'),
@@ -68,6 +67,15 @@
     monitor: svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
     alertCircle: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.5"/>')
   };
+
+  // TerraShield logo (web/assets/icons/terrashield-icon.svg). A getter so every copy on the page gets its own
+  // gradient/clip ids — a hidden copy (e.g. the header on a small screen) must never be the one others point to.
+  var LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22795C"/><stop offset="1" stop-color="#0F4A39"/></linearGradient><clipPath id="sh"><path d="M256 92 L396 142 V258 C396 346 338 402 256 432 C174 402 116 346 116 258 V142 Z"/></clipPath></defs><rect width="512" height="512" rx="114" fill="url(#bg)"/><path d="M256 92 L396 142 V258 C396 346 338 402 256 432 C174 402 116 346 116 258 V142 Z" fill="#F5F8F6"/><g clip-path="url(#sh)"><polygon points="100,262 232,352 412,176 412,450 100,450" fill="#BFE6D3"/><polyline points="100,262 232,352 412,176" fill="none" stroke="#1A6650" stroke-width="30" stroke-linejoin="round"/><line x1="232" y1="352" x2="232" y2="450" stroke="#1A6650" stroke-width="16"/></g><circle cx="226" cy="198" r="40" fill="#E03A3E"/></svg>';
+  var logoN = 0;
+  Object.defineProperty(I, 'logo', { enumerable: true, get: function () {
+    var k = 'tslogo' + (++logoN);
+    return LOGO_SVG.replace(/id="(bg|sh)"/g, 'id="' + k + '$1"').replace(/url\(#(bg|sh)\)/g, 'url(#' + k + '$1)');
+  } });
   var STATUS_ICON = { red: I.stop, yellow: I.alert, green: I.lens, grey: I.question };
   var LEVEL_ICON = { high: I.stop, medium: I.alert, info: I.info };
 
